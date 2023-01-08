@@ -1,7 +1,7 @@
 use{
     actix_web::HttpResponse,
     serde::{Deserialize,Serialize},
-
+    std::fs,
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -37,6 +37,16 @@ impl<T: Serialize> Resp<T> {
             Resp::Created(payload) => HttpResponse::Created()
             .content_type("application/json")
             .json(payload),
+        }
+    }
+}
+
+pub fn rd(path: &str) -> Vec<u8> {
+    match fs::read(path) {
+        Ok(contents) => contents,
+        Err(e) => {
+            eprintln!("Error reading file: {}", e);
+            Vec::new()
         }
     }
 }
